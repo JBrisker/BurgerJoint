@@ -1,0 +1,147 @@
+.home {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: linear-gradient(90 degrees, #ff8a00, #e52e71, #fff);
+}
+h1:hover {
+  color: #ff4500;
+}
+nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  list-style: none;
+  padding: 0px;
+  margin: 50px 0;
+  background-color:#fff;
+}
+
+a {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+  margin: 10px 0;
+  text-decoration: none;
+  font-size: 1.2rem;
+  color: #b22222;
+  font-weight: bold;
+}
+
+a:hover {
+  color: #ff4500;
+}
+
+.logo {
+  margin-bottom: 40px;
+  margin-top: 20px;
+  width: 50%;
+  border-radius: 10px;
+}
+.origin {
+  background-color: #ff441f;
+  color: white;
+  font-size: 20px;
+  font-family: cursive;
+  font-style: italic;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 20px;
+}
+.LoginForm {
+  background-color: #b22222;
+  color: white;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 25px;
+  border: #ff4500;
+}
+input {
+  margin: 10px;
+  font-size: 12px;
+  padding: 5px;
+  background-color: #fac3a5f1;
+  color: #000;
+}
+button {
+  padding: 2px;
+  margin: 10px;
+  background: #ff7b00;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.2s;
+  width: auto;
+  height: auto;
+}
+
+button:hover {
+  background: #b22222;
+}
+.SignUpForm {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background-color: #b22222;
+  color: white;
+  border-radius: 10px;
+  box-shadow: #ff4500;
+  white-space: normal;
+  width: auto;
+  height: auto;
+}
+
+.ContactForm {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: #b22222;
+  color: white;
+}
+
+.cards {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: #ea0d0d;
+  color: white;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px;
+}
+.cardImage {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+}
+.cardInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 10px;
+  padding: 20px;
+  margin: 20px;
+  background-color:#fff;
+  color:#ea0d0d;
+}
+.cardTitle {
+  font-weight: bold;
+  font-family: Arial, sans-serif;
+  font-size: 15px;
+}
+.cardText {
+  font-family: Arial, sans-serif;
+  font-size: 12px;
+background-color: #ff7b00;
+  color: white;
+  border-radius: 10px;
+  padding: 10px;
+  margin: 10px;
+}
