@@ -73,7 +73,8 @@ function Home() {
   //create text
   const text = "Jay's Burger Joint";
   return (
-    <div>
+    
+    <div className="home">
       <h2>Welcome To</h2>
       <h1 className="letter">
         {text.split("").map((char, index) => (
@@ -162,49 +163,81 @@ function SignIn() {
 
 //sign up page
 function SignUp() {
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("");
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const formData = new FormData(e.target);
-
-    const user = {
-      FirstName: formData.get("firstName"),
-      LastName: formData.get("lastName"),
-      Email: formData.get("email"),
-      Password: formData.get("password"),
-      Phone: formData.get("phone"),
-    };
     //Error Checking
-
-    if (!user.FirstName || !user.Email || !user.Password) {
+    if (!firstName || !email || !password) {
       alert("Please fill out required fields");
       return;
     }
-    if (!user.Email.includes("@")) {
+    if (!email.includes("@")) {
       alert("Please enter a valid email");
       return;
     }
-    if (user.Password.length < 8) {
+    if (password.length < 8) {
       alert("Password needs 8 characters minimum");
       return;
     }
 
+    const user = {
+      FirstName: firstName,
+      LastName: lastName,
+      Email: email,
+      Password: password,
+      Phone: phone
+    };
+    //save user to local storage
     localStorage.setItem("user", JSON.stringify(user));
   };
   return (
     <form onSubmit={handleSubmit} className="SignUpForm">
-      <label for="firstName">First Name: </label>
-      <input type="text" id="firstName" name="firstName" required></input>
-      <label for="password">Last Name: </label>
-      <input type="text" name="lastName" id="lastName"></input>
-      <label for="email">Email: </label>
-      <input type="email" id="email" name="email" required></input>
+      <label htmlFor="firstName">First Name: </label>
+      <input
+        type="text"
+        value={firstName}
+        onChange={(e) => setFirstName(e.target.value)}
+        required
+      />
+      <label htmlFor="lastName">Last Name: </label>
+      <input
+        type="text"
+        value={lastName}
+        onChange={(e) => setLastName(e.target.value)}
+      />
+      <label htmlFor="username" placeholder="email">
+          Email:{""}
+        </label>
+        <input
+          type="email"
+          value={email}
+          required
+          onChange={(e) => setEmail(e.target.value)}
+        ></input>
       <label htmlFor="password" placeholder="password">
         Password:
       </label>
-      <input type="password" name="password" required></input>
-      <label for="phone">Phone Number: </label>
-      <input type="tel" id="phone" name="phone"></input>
+      <input
+        type="password"
+        value={password}
+        required
+        onChange={(e) => setPassword(e.target.value)}
+      ></input>
+
+      <label htmlFor="phone">Phone Number: </label>
+      <input
+        type="tel"
+        id="phone"
+        name="phone"
+        value={phone}
+        onChange={(e) => setPhone(e.target.value)}
+      ></input>
       <button type="submit">Submit</button>
       <button type="reset" onClick={() => (location.href = "/")}>
         Cancel
@@ -244,362 +277,245 @@ function Menu() {
     </div>
   );
 }
-//Burger menu
+function MenuCard({ item }) {
+  return (
+    <Card sx={{ maxWidth: 345 }}>
+      <CardActionArea>
+        <CardMedia
+          component="img"
+          className="cardImage"
+          image={item.image}
+          alt={item.alt}
+        />
+        <CardContent>
+          <Typography variant="h4" className="cardTitle">
+            {item.name}
+          </Typography>
+          <Typography variant="body2" className="cardText">
+            {item.description}
+          </Typography>
+        </CardContent>
+      </CardActionArea>
+    </Card>
+  );
+}
+
 function Burgers() {
+  const items = [
+    {
+      name: "Classic Hamburger",
+      description:
+        "Classic single patty hamburger, grilled toasted buns, lettuce, and tomato.",
+      image: classic,
+      alt: "single patty hamburger with fries",
+    },
+    {
+      name: "Cheese Burger",
+      description:
+        "Classic hamburger with a delicious melted slice of smoked cheddar",
+      image: cheese,
+      alt: "single patty burger w/ cheese",
+    },
+    {
+      name: "Double Burger",
+      description:
+        "Double the hunger? Double the BEEF! Delicious cheeseburger with 2 all beef patties",
+      image: double,
+      alt: "double patty burger",
+    },
+    {
+      name: "Behemoth Burger",
+      description:
+        "triple patty cheeseburger weighing 1lb. Hungry? Up for a challenge? Then try our Behemoth hamburger!",
+      image: triple,
+      alt: "triple patty burger",
+    },
+  ];
+
   return (
     <div className="menuCards">
-      <Card sx={{ maxWidth: 345 }}>
-        <CardActionArea>
-          <CardMedia
-            component="img"
-            className="cardImage"
-            image={classic}
-            alt="single patty hamburger with fries"
-          />
-          <CardContent>
-            <Typography variant="h4" className="cardTitle">
-              Classic Hamburger
-            </Typography>
-            <Typography variant="body2" className="cardText">
-              Classic single patty hamburger, grilled toasted buns, lettuce, and
-              tomato.
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-      </Card>
-
-      <Card sx={{ maxWidth: 345 }}>
-        <CardActionArea>
-          <CardMedia
-            component="img"
-            className="cardImage"
-            image={cheese}
-            alt="single patty burger w/ cheese"
-          />
-          <CardContent>
-            <Typography variant="h4" className="cardTitle">
-              Cheese Burger
-            </Typography>
-            <Typography variant="body2" className="cardText">
-              Classic hamburger with a delicious melted slice of smoked cheddar
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-      </Card>
-
-      <Card sx={{ maxWidth: 345 }}>
-        <CardActionArea>
-          <CardMedia
-            component="img"
-            className="cardImage"
-            image={double}
-            alt="double patty burger"
-          />
-          <CardContent>
-            <Typography variant="h4" className="cardTitle">
-              Double Burger
-            </Typography>
-            <Typography variant="body2" className="cardText">
-              Double the hunger&#63; Double the BEEF! Delicious cheeseburger
-              with 2 all beef patties
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-      </Card>
-
-      <Card sx={{ maxWidth: 345 }}>
-        <CardActionArea>
-          <CardMedia
-            component="img"
-            className="cardImage"
-            image={triple}
-            alt="triple patty burger"
-          />
-          <CardContent>
-            <Typography variant="h4" className="cardTitle">
-              Behemoth Burger
-            </Typography>
-            <Typography variant="body2" className="cardText">
-              triple patty cheeseburger weighing 1lb. Hungry&#63; Up for a
-              challenge&#63; Then try our Behemoth hamburger!
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-      </Card>
+      {items.map((item) => (
+        <MenuCard key={item.name} item={item} />
+      ))}
     </div>
   );
 }
-// //Drinks menu
+
 function Drinks() {
+  const items = [
+    {
+      name: "Fountain Soda",
+      description: "Try our selection of real sugar fountain drinks.",
+      image: soda,
+      alt: "cup",
+    },
+    {
+      name: "Milk Shake",
+      description: "triple thick, shake made with real ice cream",
+      image: soda,
+      alt: "milkshake",
+    },
+    {
+      name: "Lemonade",
+      description: "Fresh squeezed in-house lemondade",
+      image: lemonade,
+      alt: "cup of lemonade",
+    },
+    {
+      name: "Tea",
+      description: "Assortment of amazing whole leaf tea.",
+      image: tea,
+      alt: "teapot suspended over a cup of tea",
+    },
+    {
+      name: "Water",
+      description: "Ice cold water",
+      image: water,
+      alt: "clear glass of water",
+    },
+  ];
+
   return (
     <div className="menuCards">
-      <Card sx={{ maxWidth: 345 }}>
-        <CardActionArea>
-          <CardMedia
-            component="img"
-            className="cardImage"
-            image={soda}
-            alt="cup"
-          />
-          <CardContent>
-            <h4 className="cardTitle">Fountain Soda</h4>
-            <p className="cardText">
-              Try our selection of real sugar fountain drinks.
-            </p>
-          </CardContent>
-        </CardActionArea>
-      </Card>
-
-      <Card sx={{ maxWidth: 345 }}>
-        <CardActionArea>
-          <CardMedia
-            component="img"
-            className="cardImage"
-            image={soda}
-            alt="milkshake"
-          />
-          <CardContent>
-            <h4 className="cardTitle">Milk Shake</h4>
-            <p className="cardText">
-              triple thick, shake made with real ice cream
-            </p>
-          </CardContent>
-        </CardActionArea>
-      </Card>
-
-      <Card sx={{ maxWidth: 345 }}>
-        <CardActionArea>
-          <CardMedia
-            component="img"
-            className="cardImage"
-            image={lemonade}
-            alt="cup of lemonade"
-          />
-          <CardContent>
-            <h4 className="cardTitle">Lemonade</h4>
-            <p className="cardText">Fresh squeezed in-house lemondade</p>
-          </CardContent>
-        </CardActionArea>
-      </Card>
-
-      <Card sx={{ maxWidth: 345 }}>
-        <CardActionArea>
-          <CardMedia
-            component="img"
-            className="cardImage"
-            image={tea}
-            alt="bottle of juice"
-          />
-          <CardContent>
-            <h4 className="cardTitle">Tea</h4>
-            <p className="cardText">Assortment of amazing whole leaf tea.</p>
-          </CardContent>
-        </CardActionArea>
-      </Card>
-
-      <Card sx={{ maxWidth: 345 }}>
-        <CardActionArea>
-          <CardMedia
-            component="img"
-            className="cardImage"
-            image={water}
-            alt="clear glass of water"
-          />
-          <CardContent>
-            <h4 className="cardTitle">Water</h4>
-            <p className="cardText">Ice cold water</p>
-          </CardContent>
-        </CardActionArea>
-      </Card>
+      {items.map((item) => (
+        <MenuCard key={item.name} item={item} />
+      ))}
     </div>
   );
 }
-//Desserts menu
+
 function Desserts() {
+  const items = [
+    {
+      name: "Pie",
+      description: "Try our pie with a great selection from apple to sweet potato",
+      image: pie,
+      alt: "slice of pie",
+    },
+    {
+      name: "Cake",
+      description: "Try our delicious selection of cakes",
+      image: cake,
+      alt: "slice of cake",
+    },
+    {
+      name: "Ice Cream",
+      description:
+        "Try our delicious ice cream in a bowl or our delicious in-house made waffle cone",
+      image: icecream,
+      alt: "scoop of ice cream in a bowl",
+    },
+    {
+      name: "Bars",
+      description: "Try our delicious bars",
+      image: bar,
+      alt: "Chocolate chip cake bar",
+    },
+  ];
+
   return (
     <div className="cards">
-      <Card sx={{ maxWdith: 345 }}>
-        <CardActionArea>
-          <CardMedia
-            component="img"
-            className="cardImage"
-            image={pie}
-            alt="slice of pie"
-          />
-          <CardContent>
-            <h4 className="cardTitle">Pie</h4>
-            <p className="cardText">
-              Try our pie with a great selection from apple to sweet potato
-            </p>
-          </CardContent>
-        </CardActionArea>
-      </Card>
-
-      <Card sx={{ maxWidth: 345 }}>
-        <CardActionArea>
-          <CardMedia
-            component="img"
-            className="cardImage"
-            image={cake}
-            alt="slice of cake"
-          />
-          <CardContent>
-            <h4 className="cardTitle">Cake</h4>
-            <p className="cardText">Try our delicious selection of cakes</p>
-          </CardContent>
-        </CardActionArea>
-      </Card>
-
-      <Card sx={{ maxWidth: 345 }}>
-        <CardActionArea>
-          <CardMedia
-            component="img"
-            className="cardImage"
-            image={icecream}
-            alt="scoop of ice cream in a bowl"
-          />
-          <CardContent>
-            <h4 className="cardTitle">Ice Cream</h4>
-            <p className="cardText">
-              Try our delicious ice cream in a bowl or our delicious in-house
-              made waffle cone
-            </p>
-          </CardContent>
-        </CardActionArea>
-      </Card>
-
-      <Card sx={{ maxWidth: 345 }}>
-        <CardActionArea>
-          <CardMedia
-            component="img"
-            className="cardImage"
-            image={bar}
-            alt="Chocolate chip cake bar"
-          />
-          <CardContent>
-            <h4 className="cardTitle">Bars</h4>
-            <p className="cardText">Try our delicious bars</p>
-          </CardContent>
-        </CardActionArea>
-      </Card>
+      {items.map((item) => (
+        <MenuCard key={item.name} item={item} />
+      ))}
     </div>
   );
 }
-//other options menu
+
 function Other() {
+  const items = [
+    {
+      name: "Pulled Pork Cheesy Fries",
+      description:
+        'Our special cut fries layered our juicy 13 hour smoked pulled pork, topped with a gooey layer of cheese and a drizzel of our home made "Sweet Baby BBQ sauce".',
+      image: fries,
+      alt: "bed of fries topped with meat and cheese sauce",
+    },
+    {
+      name: "Chicken Sandwich",
+      description:
+        "Sink your teeth into our deliciously juicy chicken sandwich. A tender chicken breast served on a soft bun. Try our classic! Or kick it up a knotch with one of our delicious sauces:Buffalo, BBQ",
+      image: chicken,
+      alt: "Three chicken sandwiches stacked on top of a table",
+    },
+    {
+      name: "Hot Dogs",
+      description: "Plump sausage cradled in a soft bun",
+      image: hotDog,
+      alt: "hotdog with ketchup and mustard on a bun",
+    },
+    {
+      name: "Melts",
+      description:
+        "Try our delicious melts! Your choice of protein, cheese, and toppings between slices of fresh sourdough bread",
+      image: melt,
+      alt: "Grilled melt sandwiches on panini press with melted cheese, meat, and tomatoes",
+    },
+  ];
+
   return (
     <div className="menuCards">
-      <Card sx={{ maxWidth: 345 }}>
-        <CardActionArea>
-          <CardMedia
-            component="img"
-            className="cardImage"
-            image={fries}
-            alt="bed of fries with cheese sauce"
-          />
-          <CardContent>
-            <Typography variant="h4" className="cardTitle">
-              Pulled Pork Cheesy Fries
-            </Typography>
-            <Typography variant="body2" className="cardText">
-              Our special cut fries layered our juicy 13 hour smoked pulled
-              pork, topped with a gooey layer of cheese and a drizzel of our
-              home made "Sweet Baby BBQ sauce".
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-      </Card>
-
-      <Card sx={{ maxWidth: 345 }}>
-        <CardActionArea>
-          <CardMedia
-            component="img"
-            className="cardImage"
-            image={chicken}
-            alt="Three chicken sandwiches stacked on top of a table"
-          />
-          <CardContent>
-            <Typography variant="h4" className="cardTitle">
-              Chicken Sandwich
-            </Typography>
-            <Typography variant="body2" className="cardText">
-              Sink your teeth into our deliciously juicy chicken sandwich. A
-              tender chicken breast served on a soft bun. Try our classic! Or
-              kick it up a knotch with one of our delicious sauces:Buffalo, BBQ
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-      </Card>
-
-      <Card sx={{ maxWidth: 345 }}>
-        <CardActionArea>
-          <CardMedia
-            component="img"
-            className="cardImage"
-            image={hotDog}
-            alt="hotdog with ketchup and mustard swirled
-            on top being held by a hand in an unfocused background"
-          />
-          <CardContent>
-            <Typography variant="h4" className="cardTitle">
-              Hot Dogs
-            </Typography>
-            <Typography variant="body2" className="cardText">
-              Plump sausage cradled in a soft bun
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-      </Card>
-
-      <Card sx={{ maxWidth: 345 }}>
-        <CardActionArea>
-          <CardMedia
-            component="img"
-            className="cardImage"
-            image={melt}
-            alt=""
-          />
-          <CardContent>
-            <Typography variant="h4" className="cardTitle">
-              Melts
-            </Typography>
-            <Typography className="cardText">
-              Try our delicious melts! Your choice of protein, cheese, and
-              toppings between slices of fresh sourdough bread
-            </Typography>
-          </CardContent>
-        </CardActionArea>
-      </Card>
+      {items.map((item) => (
+        <MenuCard key={item.name} item={item} />
+      ))}
     </div>
   );
 }
 
 //contact page
 function Contact() {
-  const userContact = {
-    FirstName: "",
-    LastName: "",
-    Email: "",
-    Password: "",
-    Phone: "",
-    Message: "",
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [message, setMessage] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+  const userContact = { 
+    FirstName: firstName,
+    LastName: lastName,
+    Email: email,
+    Phone: phone,
+    Message: message,
   };
+  
   localStorage.setItem("client", JSON.stringify(userContact));
+};
   return (
     <div>
       <h2>Contact Us!</h2>
-      <form className="ContactForm">
-        <label for="fname">First Name: </label>
-        <input type="text" id="fname" name="fname" required></input>
-        <label for="password">Last Name: </label>
-        <input type="text" name="lname" id="lname"></input>
-        <label for="email">Email: </label>
-        <input type="email" id="email" name="email" required></input>
-        <label for="phone" placeholder="optional">
+        <form onSubmit={handleSubmit} className="SignUpForm">
+      <label htmlFor="firstName">First Name: </label>
+      <input
+        type="text"
+        value={firstName}
+        onChange={(e) => setFirstName(e.target.value)}
+        required
+      />
+      <label htmlFor="lastName">Last Name: </label>
+      <input
+        type="text"
+        value={lastName}
+        onChange={(e) => setLastName(e.target.value)}
+      />
+        <label htmlFor="email">Email: </label>
+        <input type="email"
+        id="email" 
+        name="email" 
+        required 
+        value={email} 
+        onChange={(e) => setEmail(e.target.value)}></input>
+
+        <label htmlFor="phone" placeholder="optional">
           Phone Number:{""}
         </label>
-        <input type="tel" id="phone" name="phone"></input>
-        <label for="message">Send us a message!</label>
+        <input type="tel" id="phone"
+         name="phone" 
+         value={phone}
+        onChange={(e) => setPhone(e.target.value)}></input>
+        <label htmlFor="message">Send us a message!</label>
         <textarea
           type="textarea"
           id="message"
@@ -607,6 +523,8 @@ function Contact() {
           rows={10}
           cols={100}
           required
+          value ={message}
+          onChange={(e) => setMessage(e.target.value)}
         ></textarea>
         <button type="submit">Submit</button>
         <button type="reset">Cancel</button>
