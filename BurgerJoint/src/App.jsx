@@ -109,58 +109,6 @@ function AboutUs() {
   );
 }
 
-//sign in page
-function SignIn() {
-  const currentUser = localStorage.getItem("user");
-  const user = currentUser ? JSON.parse(currentUser) : {};
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    if (email !== user.Email) {
-      alert("User not found!");
-      return;
-    }
-    if (password !== user.Password) {
-      alert("Incorrect password");
-      return;
-    }
-  }
-  return (
-    <div>
-      <form onSubmit={handleSubmit} className="LoginForm">
-        <label htmlFor="username" placeholder="email" required>
-          Email:{""}
-        </label>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        ></input>
-        <label htmlFor="password" placeholder="password" required>
-          Password:{""}
-        </label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        ></input>
-
-        <button type="button" onClick={() => (window.location.href = "menu")}>
-          Log In
-        </button>
-        <a href onClick={() => (window.location.href = "/signUp")}>
-          Sign Up
-        </a>
-        <a href onClick={() => (window.location.href = "/menu")}>
-          Continue as guest
-        </a>
-      </form>
-    </div>
-  );
-}
-
 //sign up page
 function SignUp() {
   const [firstName, setFirstName] = useState("");
@@ -168,11 +116,17 @@ function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
+  const [loginStatus, setLoginStatus] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     //Error Checking
+    try{
+      if(loginStatus){
+        alert("Already logged in!");
+        return <Redirect to ="menu" />;
+      }
     if (!firstName || !email || !password) {
       alert("Please fill out required fields");
       return;
@@ -185,14 +139,20 @@ function SignUp() {
       alert("Password needs 8 characters minimum");
       return;
     }
+  }
+  catch (error){
+    alert("An error occured during Sign up. Please try again.");
+  }
 
     const user = {
       FirstName: firstName,
       LastName: lastName,
       Email: email,
       Password: password,
-      Phone: phone
+      Phone: phone,
+      loginStatus: true,
     };
+    setLoginStatus(true);
     //save user to local storage
     localStorage.setItem("user", JSON.stringify(user));
   };
@@ -243,8 +203,86 @@ function SignUp() {
         Cancel
       </button>
     </form>
+   
+
   );
 }
+
+
+//sign in page
+function SignIn() {
+  const currentUser = localStorage.getItem("user");
+  const user = currentUser ? JSON.parse(currentUser) : {};
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loginStatus, setLoginStatus] = useState(false);
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    try{
+      if(loginStatus) {
+        alert("You are already logged in!");
+        return < Redirect to="/menu" />;
+      }
+      if(!email || !password) {
+        alert("Please fill out required fields");
+        return;
+      }
+     if (email !== user.Email) {
+      alert("User not found!");
+      return;
+      }
+     if (password !== user.Password) {
+      alert("Incorrect password");
+      return;
+     }
+  }
+  catch (error) {
+    alert("An error occurred during Login. Please try again.");
+    return;
+  }
+  setLoginStatus(true);
+};
+
+  return (
+    <div>
+      <form onSubmit={handleSubmit} className="LoginForm">
+        <label htmlFor="username" 
+        placeholder="email" 
+        required>
+          Email:{""}
+        </label>
+        <input
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        ></input>
+        <label htmlFor="password" 
+        placeholder="password" 
+        required>
+          Password:{""}
+        </label>
+        <input
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        ></input>
+        
+        <button type="button" onClick={() => (window.location.href = "/menu")}>
+          Log In
+        </button>
+        <a href onClick={() => (window.location.href ="/signUp")}>
+          Sign Up
+        </a>
+        <a href onClick={() => (window.location.href = "/menu")}>
+          Continue as guest
+        </a>
+      </form>
+    </div>
+  );
+}
+
+
 //Menu page
 function Menu() {
   const [menuPage, setMenuPage] = useState("");
@@ -260,9 +298,10 @@ function Menu() {
         return <Other />;
     }
   };
-  const user = JSON.parse(localStorage.getItem("user"));
+  const user = JSON.parse(localStorage.getItem("user"))||{};
   const userName = user.FirstName || "Guest";
   const userWelcome = userName.replace(/^./, (char) => char.toUpperCase());
+
   return (
     <div>
       <h2>Welcome, {userWelcome}!</h2>
@@ -273,6 +312,7 @@ function Menu() {
         <a onClick={() => setMenuPage("desserts")}>Desserts</a>
         <a onClick={() => setMenuPage("other")}>Other</a>
       </nav>
+
       {openPage()}
     </div>
   );
@@ -294,7 +334,12 @@ function MenuCard({ item }) {
           <Typography variant="body2" className="cardText">
             {item.description}
           </Typography>
+          <Typography variant="h5" className="cardPrice">
+            ${item.price.toFixed(2)}
+          </Typography>
+          
         </CardContent>
+        
       </CardActionArea>
     </Card>
   );
@@ -308,6 +353,7 @@ function Burgers() {
         "Classic single patty hamburger, grilled toasted buns, lettuce, and tomato.",
       image: classic,
       alt: "single patty hamburger with fries",
+      price: 5.99,
     },
     {
       name: "Cheese Burger",
@@ -315,6 +361,7 @@ function Burgers() {
         "Classic hamburger with a delicious melted slice of smoked cheddar",
       image: cheese,
       alt: "single patty burger w/ cheese",
+      price: 6.99,
     },
     {
       name: "Double Burger",
@@ -322,6 +369,7 @@ function Burgers() {
         "Double the hunger? Double the BEEF! Delicious cheeseburger with 2 all beef patties",
       image: double,
       alt: "double patty burger",
+      price: 8.99,
     },
     {
       name: "Behemoth Burger",
@@ -329,6 +377,7 @@ function Burgers() {
         "triple patty cheeseburger weighing 1lb. Hungry? Up for a challenge? Then try our Behemoth hamburger!",
       image: triple,
       alt: "triple patty burger",
+      price: 12.99,
     },
   ];
 
@@ -348,30 +397,35 @@ function Drinks() {
       description: "Try our selection of real sugar fountain drinks.",
       image: soda,
       alt: "cup",
+      price: 2.99,
     },
     {
       name: "Milk Shake",
       description: "triple thick, shake made with real ice cream",
       image: soda,
       alt: "milkshake",
+      price: 4.99,
     },
     {
       name: "Lemonade",
       description: "Fresh squeezed in-house lemondade",
       image: lemonade,
       alt: "cup of lemonade",
+      price: 2.99,
     },
     {
       name: "Tea",
-      description: "Assortment of amazing whole leaf tea.",
+      description: "Assortment of amazing whole leaf tea. Price per pot.",
       image: tea,
       alt: "teapot suspended over a cup of tea",
+      price: 6.99,
     },
     {
       name: "Water",
       description: "Ice cold water",
       image: water,
       alt: "clear glass of water",
+      price: 0,
     },
   ];
 
@@ -391,12 +445,14 @@ function Desserts() {
       description: "Try our pie with a great selection from apple to sweet potato",
       image: pie,
       alt: "slice of pie",
+      price: 4.99,
     },
     {
       name: "Cake",
       description: "Try our delicious selection of cakes",
       image: cake,
       alt: "slice of cake",
+      price:4.99,
     },
     {
       name: "Ice Cream",
@@ -404,12 +460,14 @@ function Desserts() {
         "Try our delicious ice cream in a bowl or our delicious in-house made waffle cone",
       image: icecream,
       alt: "scoop of ice cream in a bowl",
+      price:1.50,
     },
     {
       name: "Bars",
       description: "Try our delicious bars",
       image: bar,
       alt: "Chocolate chip cake bar",
+      price:4.60
     },
   ];
 
@@ -430,6 +488,7 @@ function Other() {
         'Our special cut fries layered our juicy 13 hour smoked pulled pork, topped with a gooey layer of cheese and a drizzel of our home made "Sweet Baby BBQ sauce".',
       image: fries,
       alt: "bed of fries topped with meat and cheese sauce",
+      price: 7.99,
     },
     {
       name: "Chicken Sandwich",
@@ -437,12 +496,14 @@ function Other() {
         "Sink your teeth into our deliciously juicy chicken sandwich. A tender chicken breast served on a soft bun. Try our classic! Or kick it up a knotch with one of our delicious sauces:Buffalo, BBQ",
       image: chicken,
       alt: "Three chicken sandwiches stacked on top of a table",
+      price: 6.99,
     },
     {
       name: "Hot Dogs",
       description: "Plump sausage cradled in a soft bun",
       image: hotDog,
       alt: "hotdog with ketchup and mustard on a bun",
+      price: 4.99
     },
     {
       name: "Melts",
@@ -450,6 +511,7 @@ function Other() {
         "Try our delicious melts! Your choice of protein, cheese, and toppings between slices of fresh sourdough bread",
       image: melt,
       alt: "Grilled melt sandwiches on panini press with melted cheese, meat, and tomatoes",
+      price: 7.99
     },
   ];
 
@@ -480,7 +542,7 @@ function Contact() {
     Phone: phone,
     Message: message,
   };
-  
+
   localStorage.setItem("client", JSON.stringify(userContact));
 };
   return (
@@ -532,24 +594,6 @@ function Contact() {
     </div>
   );
 }
-//customization page
-// function Customize(){
-//   return(
-// <div>
-//   <ul>
-//     <li>Extra Cheese</li>
-//     <li>Extra Meat</li>
-//     <li>Onions</li>
-//     <li>pickles</li>
-//     <li>Bacon</li>
-//     <li>Avocado</li>
-//     <li>Jalapenos</li>
-//     <li>Extra Sauce</li>
-//     <li>Grilled Onions</li>
-//   </ul>
-// </div>
-//   );
-//
 
 function Footer() {
   const year = new Date().getFullYear();
